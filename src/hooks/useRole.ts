@@ -1,0 +1,1 @@
+// This file can be deleted since we're removing role-based functionality
