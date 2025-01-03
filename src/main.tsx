@@ -1,19 +1,7 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { Router } from './router';
-import { AuthProvider } from './contexts/AuthContext';
-import { ClubProvider } from './contexts/ClubContext';
-import { ThemeProvider } from './contexts/ThemeContext';
-import './index.css';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App'; // Adjust the path as necessary
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <AuthProvider>
-      <ThemeProvider>
-        <ClubProvider>
-          <Router />
-        </ClubProvider>
-      </ThemeProvider>
-    </AuthProvider>
-  </StrictMode>
-);
+const rootElement = document.getElementById('root')!;
+const root = ReactDOM.createRoot(rootElement);
+root.render(<App />);

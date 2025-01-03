@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react';
-import type { User } from '@clerk/clerk-react';
 
-export const UserContext = createContext<User | null | undefined>(undefined);
+export const UserContext = createContext<any>(null);
 
 export function useUserContext() {
   const context = useContext(UserContext);

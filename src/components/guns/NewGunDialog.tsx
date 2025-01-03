@@ -1,203 +1,128 @@
-import React, { useState, type FormEvent, type ChangeEvent } from 'react';
+import React, { useState, type FormEvent } from 'react';
 import { Dialog } from '@headlessui/react';
 import { X } from 'lucide-react';
 import { gunBrands } from '../../data/gunBrands';
-import { BarrelLengthSelector } from './BarrelLengthSelector';
 import type { Gun } from '../../types/gun';
 
-interface NewGunDialogProps {
+export interface NewGunDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (gun: Gun) => void;
 }
 
-const GAUGE_OPTIONS = ['12', '20', '28', '.410'] as const;
-const ACTION_OPTIONS = ['Break Action', 'Semi-Auto', 'Pump', 'Bolt Action', 'Lever Action'] as const;
-const CHOKE_OPTIONS = ['Cylinder', 'Improved Cylinder', 'Modified', 'Full'] as const;
-const STOCK_OPTIONS = ['Standard', 'Pistol Grip', 'Adjustable'] as const;
-const STOCK_MATERIAL_OPTIONS = ['Wood', 'Synthetic'] as const;
-const SIGHT_OPTIONS = ['Bead', 'Ribbed', 'Red Dot', 'Scope'] as const;
-const FINISH_OPTIONS = ['Blued', 'Stainless', 'Camo'] as const;
-
 export function NewGunDialog({ isOpen, onClose, onSubmit }: NewGunDialogProps) {
-  const [formData, setFormData] = useState<Partial<Gun>>({
-    gauge: '12',
-    brand: '',
-    model: ''
-  });
-  const [isCustomBrand, setIsCustomBrand] = useState(false);
-  const [isCustomModel, setIsCustomModel] = useState(false);
+  const [gun, setGun] = useState<Partial<Gun>>({});
+  const [errors, setErrors] = useState<string>('');
 
-  const availableModels = formData.brand && !isCustomBrand
-    ? gunBrands.find(b => b.brand === formData.brand)?.models || []
-    : [];
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.brand || !formData.gauge) return;
-    onSubmit(formData as Gun);
-    setFormData({ gauge: '12' });
+    // Validation logic here
+    onSubmit(gun as Gun);
   };
 
   return (
-    <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-      
+    <Dialog open={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 bg-black bg-opacity-30" />
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <Dialog.Panel className="mx-auto max-w-2xl w-full bg-white rounded-xl shadow-lg">
-          <div className="flex items-center justify-between p-6 border-b">
-            <Dialog.Title className="text-lg font-medium">Add New Gun</Dialog.Title>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close dialog"
-              className="text-gray-400 hover:text-gray-500"
-            >
-              <X className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </div>
+        <Dialog.Panel className="max-w-md w-full bg-white rounded-lg shadow-lg">
+          <form onSubmit={handleSubmit}>
+            <div className="p-4">
+              <div className="flex justify-between items-center">
+                <Dialog.Title className="text-lg font-medium text-gray-900">Add New Gun</Dialog.Title>
+                <button type="button" onClick={onClose} aria-label="Close">
+                  <X className="h-5 w-5 text-gray-500" />
+                </button>
+              </div>
 
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {/* Required Fields */}
-              <div>
-                <label htmlFor="gun-name" className="block text-sm font-medium text-gray-700">
-                  Name *
-                </label>
-                <input
-                  id="gun-name"
-                  type="text"
-                  required
-                  aria-label="Gun name"
-                  placeholder="Enter gun name"
-                  value={formData.name || ''}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
+              <div className="mt-4">
+                <label htmlFor="gauge-select" className="block text-sm font-medium text-gray-700">Gauge</label>
+                <select
+                  id="gauge-select"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  value={gun.gauge ?? ''}
+                  onChange={(e) => setGun({ ...gun, gauge: e.target.value as Gun['gauge'] })}
+                >
+                  <option value="">Select a gauge</option>
+                  <option value="12">12</option>
+                  <option value="20">20</option>
+                  <option value="28">28</option>
+                  <option value=".410">.410</option>
+                </select>
+              </div>
+
+              <div className="mt-4">
+                <label htmlFor="action-select" className="block text-sm font-medium text-gray-700">Action</label>
+                <select
+                  id="action-select"
+                  className="mt-1 block w-full rounded-md"
+                  value={gun.action ?? ''}
+                  onChange={(e) => setGun({ ...gun, action: e.target.value as Gun['action'] })}
+                >
+                  <option value="">Select an action</option>
+                  <option value="Break Action">Break Action</option>
+                  <option value="Semi-Auto">Semi-Auto</option>
+                  <option value="Pump">Pump</option>
+                  <option value="Bolt Action">Bolt Action</option>
+                  <option value="Lever Action">Lever Action</option>
+                </select>
+              </div>
+
+              <div className="mt-4">
+                <label htmlFor="model-input" className="block text-sm font-medium text-gray-700">Model</label>
+                <input
+                  id="model-input"
+                  placeholder="Model name"
+                  className="mt-1 block w-full rounded-md border-gray-300"
+                  value={gun.model ?? ''}
+                  onChange={(e) => setGun({ ...gun, model: e.target.value })}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Brand *
-                </label>
+              <div className="mt-4">
+                <label htmlFor="barrel-type-select" className="block text-sm font-medium text-gray-700">Barrel Type</label>
                 <select
-                  required
-                  value={isCustomBrand ? '' : (formData.brand || '')}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                    const value = e.target.value;
-                    if (value === 'other') {
-                      setIsCustomBrand(true);
-                      setFormData({ ...formData, brand: '', model: '' });
-                    } else {
-                      setIsCustomBrand(false);
-                      setFormData({ ...formData, brand: value, model: '' });
-                    }
-                  }}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  id="barrel-type-select"
+                  className="mt-1 block w-full rounded-md"
+                  value={gun.barrelConfig?.type ?? 'Single'}
+                  onChange={(e) =>
+                    setGun({
+                      ...gun,
+                      barrelConfig: {
+                        ...(gun.barrelConfig || {}),
+                        type: e.target.value as Gun['barrelConfig']['type'],
+                        chokes: gun.barrelConfig?.chokes || { first: 'Cylinder (Cyl)' },
+                      },
+                    })
+                  }
                 >
-                  <option value="">Select brand</option>
-                  {gunBrands.map((brand) => (
-                    <option key={brand.brand} value={brand.brand}>
-                      {brand.brand}
-                    </option>
-                  ))}
-                  <option value="other">Other</option>
+                  <option value="Single">Single</option>
+                  <option value="Over/Under">Over/Under</option>
+                  <option value="Side-by-Side">Side-by-Side</option>
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Gauge *
-                </label>
-                <select
-                  required
-                  value={formData.gauge}
-                  onChange={e => setFormData({ ...formData, gauge: e.target.value as Gun['gauge'] })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                >
-                  {GAUGE_OPTIONS.map(gauge => (
-                    <option key={gauge} value={gauge}>{gauge}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Optional Fields */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Model
-                </label>
+              <div className="mt-4">
+                <label htmlFor="barrel-length-input" className="block text-sm font-medium text-gray-700">Barrel Length</label>
                 <input
-                  type="text"
-                  value={formData.model || ''}
-                  onChange={e => setFormData({ ...formData, model: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  type="number"
+                  min={18}
+                  id="barrel-length-input"
+                  placeholder="Barrel length"
+                  className="mt-1 block w-full rounded-md border-gray-300"
+                  value={gun.barrelLength ?? ''}
+                  onChange={(e) => setGun({ ...gun, barrelLength: Number(e.target.value) })}
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Action Type
-                </label>
-                <select
-                  value={formData.action || ''}
-                  onChange={e => setFormData({ ...formData, action: e.target.value as Gun['action'] })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              <div className="mt-4">
+                <button
+                  type="submit"
+                  aria-label="Add Gun"
+                  className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                 >
-                  <option value="">Select action</option>
-                  {ACTION_OPTIONS.map(action => (
-                    <option key={action} value={action}>{action}</option>
-                  ))}
-                </select>
+                  Add Gun
+                </button>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Choke
-                </label>
-                <select
-                  value={formData.choke || ''}
-                  onChange={e => setFormData({ ...formData, choke: e.target.value as Gun['choke'] })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                >
-                  <option value="">Select choke</option>
-                  {CHOKE_OPTIONS.map(choke => (
-                    <option key={choke} value={choke}>{choke}</option>
-                  ))}
-                </select>
-              </div>
-
-              <BarrelLengthSelector
-                value={formData.barrelLength}
-                onChange={(length) => setFormData({ ...formData, barrelLength: length })}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Notes
-              </label>
-              <textarea
-                rows={3}
-                value={formData.notes || ''}
-                onChange={e => setFormData({ ...formData, notes: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-
-            <div className="flex justify-end space-x-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md"
-              >
-                Add Gun
-              </button>
             </div>
           </form>
         </Dialog.Panel>

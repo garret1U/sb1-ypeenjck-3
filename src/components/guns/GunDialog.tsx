@@ -152,7 +152,7 @@ export function GunDialog({ isOpen, onClose, onSubmit, gun }: GunDialogProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="model-input" className="block text-sm font-medium text-gray-700">
                   Model
                 </label>
                 {!isCustomBrand && availableModels.length > 0 ? (
@@ -180,24 +180,24 @@ export function GunDialog({ isOpen, onClose, onSubmit, gun }: GunDialogProps) {
                   </select>
                 ) : (
                   <input
-                    type="text"
-                    placeholder="Enter model name"
-                    value={formData.model || ''}
-                    onChange={e => setFormData({ ...formData, model: e.target.value })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    id="model-input"
+                    placeholder="Model name"
+                    className="mt-1 block w-full rounded-md border-gray-300"
+                    value={formData.model ?? ''}
+                    onChange={(e) => setFormData({ ...formData, model: e.target.value })}
                   />
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="gauge-select" className="block text-sm font-medium text-gray-700">
                   Gauge *
                 </label>
                 <select
-                  required
+                  id="gauge-select"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   value={formData.gauge}
                   onChange={e => setFormData({ ...formData, gauge: e.target.value as Gun['gauge'] })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
                   {GAUGE_OPTIONS.map(gauge => (
                     <option key={gauge} value={gauge}>{gauge}</option>
@@ -206,13 +206,14 @@ export function GunDialog({ isOpen, onClose, onSubmit, gun }: GunDialogProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="action-select" className="block text-sm font-medium text-gray-700">
                   Action Type
                 </label>
                 <select
+                  id="action-select"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   value={formData.action || ''}
                   onChange={e => setFormData({ ...formData, action: e.target.value as Gun['action'] })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
                   <option value="">Select action</option>
                   {ACTION_OPTIONS.map(action => (

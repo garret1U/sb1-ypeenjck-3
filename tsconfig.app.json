@@ -21,7 +21,8 @@
     "noFallthroughCasesInSwitch": true,
 
     "types": ["react", "react-dom"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src"]
 }

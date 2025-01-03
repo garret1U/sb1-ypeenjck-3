@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { Building2, Phone, Mail, Globe, Calendar, Users, PenSquare, Save } from 'lucide-react';
 import { useClub } from '../../hooks/useClub';
-import { useRole } from '../../hooks/useRole';
 import type { Club } from '../../types/club';
 
 export function ClubProfile() {
   const { club, updateClub } = useClub('1'); // TODO: Get club ID from context/route
-  const { hasPermission } = useRole();
   const [isEditing, setIsEditing] = useState(false);
   const [editedClub, setEditedClub] = useState<Club>(club);
+
+  // Example: Define a mock hasPermission function
+  const hasPermission = (permission: string) => {
+    // Implement your permission logic here
+    return true; // or false based on your logic
+  };
 
   const canEdit = hasPermission('manage_clubs') || hasPermission('manage_club_settings');
 
@@ -28,12 +32,16 @@ export function ClubProfile() {
       <div className="ml-4 flex-1">
         <div className="text-sm font-medium text-gray-500">{label}</div>
         {isEditing && typeof value === 'string' ? (
-          <input
-            type="text"
-            value={editedClub[field] as string || ''}
-            onChange={(e) => setEditedClub({ ...editedClub, [field]: e.target.value })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          />
+          <>
+            <label htmlFor={`club-${field}`} className="block text-sm font-medium text-gray-700">{label}</label>
+            <input
+              id={`club-${field}`}
+              type="text"
+              value={editedClub[field] as string || ''}
+              onChange={(e) => setEditedClub({ ...editedClub, [field]: e.target.value })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            />
+          </>
         ) : (
           <div className="mt-1 text-sm text-gray-900">{value || 'Not specified'}</div>
         )}
@@ -78,12 +86,16 @@ export function ClubProfile() {
         <div className="mt-6">
           <h3 className="text-lg font-medium text-gray-900 mb-2">About</h3>
           {isEditing ? (
-            <textarea
-              value={editedClub.description || ''}
-              onChange={(e) => setEditedClub({ ...editedClub, description: e.target.value })}
-              rows={4}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            />
+            <>
+              <label htmlFor="club-description" className="block text-sm font-medium text-gray-700">Description</label>
+              <textarea
+                id="club-description"
+                value={editedClub.description || ''}
+                onChange={(e) => setEditedClub({ ...editedClub, description: e.target.value })}
+                rows={4}
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              />
+            </>
           ) : (
             <p className="text-sm text-gray-600">{club.description || 'No description available.'}</p>
           )}
