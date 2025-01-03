@@ -93,12 +93,14 @@ export function ScoreEntry({ onSubmit }: ScoreEntryProps) {
         
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="game-type" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Game Type
             </label>
             <select
+              id="game-type"
               value={game}
-              onChange={(e) => {
+              aria-label="Select game type"
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                 setGame(e.target.value as GameType);
                 setBirds([]);
               }}
@@ -111,11 +113,13 @@ export function ScoreEntry({ onSubmit }: ScoreEntryProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="gauge-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Gauge
             </label>
             <select
+              id="gauge-select"
               value={gauge}
+              aria-label="Select gauge"
               onChange={(e) => setGauge(e.target.value as GaugeType)}
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:text-white"
             >

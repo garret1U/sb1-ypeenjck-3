@@ -57,14 +57,16 @@ export function QuickEntry({ totalShots, game, onComplete }: QuickEntryProps) {
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="total-score" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Total Score
           </label>
           <input
+            id="total-score"
             type="number"
             min="0"
             max={totalShots}
             value={totalScore}
+            aria-label="Total score"
             onChange={handleScoreChange}
             className="block w-24 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
           />
@@ -78,6 +80,8 @@ export function QuickEntry({ totalShots, game, onComplete }: QuickEntryProps) {
               <button
                 key={i}
                 onClick={() => handleShotClick(i)}
+                aria-label={`Missed shot ${i + 1}`}
+                title={`Mark shot #${i + 1} as missed`}
                 disabled={!missedShots.includes(i) && missedShots.length >= (totalShots - totalScore)}
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors
                   ${missedShots.includes(i)

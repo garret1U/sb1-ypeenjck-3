@@ -1,49 +1,46 @@
-export type GameType = 'Skeet' | 'Doubles Skeet' | 'Trap' | '5-Stand' | 'Sporting Clays';
-export type FieldAvailability = 'available' | 'under_maintenance';
+import type { GameType } from './index';
 
-export interface TrapMachine {
-  id: number;
-  location: string;
-  angle?: number;
+type FieldAvailability = 'available' | 'maintenance' | 'closed';
+
+interface MaintenanceSchedule {
+  date: string;
+  note?: string;
 }
 
-export interface TrapConfig {
-  trap_house_location: string;
+interface FiveStandConfig {
+  machines: Array<{
+    position: string;
+    type: string;
+  }>;
+  stands: number;
+}
+
+interface TrapConfig {
   wobble_trap: boolean;
   arc_angle: number;
 }
 
-export interface FiveStandConfig {
-  stands: number;
-  machines: TrapMachine[];
-}
-
-export interface SportingClaysStation {
-  station_number: number;
+interface SportingClaysStation {
   birds_per_station: number;
+  machine_positions: string[];
 }
 
-export interface SportingClaysConfig {
+interface SportingClaysConfig {
   total_stations: number;
   stations: SportingClaysStation[];
 }
 
-export interface MaintenanceEntry {
-  date: string;
-  note: string;
-}
-
-export interface FieldConfiguration {
+interface FieldConfigurations {
   '5-Stand'?: FiveStandConfig;
   'Trap'?: TrapConfig;
   'Sporting Clays'?: SportingClaysConfig;
 }
 
 export interface Field {
-  field_id: string;
+  id: string;
   name: string;
-  games_supported: GameType[];
-  configurations: FieldConfiguration;
-  maintenance_schedule: MaintenanceEntry[];
   availability: FieldAvailability;
+  games_supported: GameType[];
+  maintenance_schedule: MaintenanceSchedule[];
+  configurations: FieldConfigurations;
 }

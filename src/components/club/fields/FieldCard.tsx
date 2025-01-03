@@ -1,3 +1,4 @@
+import React, { FC } from 'react';
 import { Target, Calendar, PenSquare, X, AlertTriangle } from 'lucide-react';
 import type { Field } from '../../../types/field';
 
@@ -7,7 +8,7 @@ interface FieldCardProps {
   onDelete: () => void;
 }
 
-export function FieldCard({ field, onEdit, onDelete }: FieldCardProps) {
+export function FieldCard({ field, onEdit, onDelete }: FieldCardProps): JSX.Element {
   const nextMaintenance = field.maintenance_schedule
     .filter(m => new Date(m.date) >= new Date())
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
@@ -25,9 +26,9 @@ export function FieldCard({ field, onEdit, onDelete }: FieldCardProps) {
                 }`}
               >
                 {field.availability === 'available' ? (
-                  <Target className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  <Target className="h-5 w-5 text-green-600 dark:text-green-400" aria-hidden="true" />
                 ) : (
-                  <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                  <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" aria-hidden="true" />
                 )}
               </div>
             </div>
@@ -41,16 +42,22 @@ export function FieldCard({ field, onEdit, onDelete }: FieldCardProps) {
 
           <div className="flex space-x-2">
             <button
+              type="button"
               onClick={onEdit}
+              aria-label={`Edit ${field.name}`}
+              title={`Edit ${field.name}`}
               className="p-1 text-gray-400 hover:text-indigo-600 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors"
             >
-              <PenSquare className="h-5 w-5" />
+              <PenSquare className="h-5 w-5" aria-hidden="true" />
             </button>
             <button
+              type="button"
               onClick={onDelete}
+              aria-label={`Delete ${field.name}`}
+              title={`Delete ${field.name}`}
               className="p-1 text-gray-400 hover:text-red-600 dark:text-gray-500 dark:hover:text-red-400 transition-colors"
             >
-              <X className="h-5 w-5" />
+              <X className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -58,7 +65,7 @@ export function FieldCard({ field, onEdit, onDelete }: FieldCardProps) {
         {nextMaintenance && (
           <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/50 rounded-md">
             <div className="flex">
-              <Calendar className="h-5 w-5 text-yellow-400 dark:text-yellow-500" />
+              <Calendar className="h-5 w-5 text-yellow-400 dark:text-yellow-500" aria-hidden="true" />
               <div className="ml-3">
                 <h4 className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
                   Upcoming Maintenance

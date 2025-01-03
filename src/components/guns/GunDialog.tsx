@@ -1,9 +1,9 @@
+import React, { useState, useEffect, type FormEvent, type ChangeEvent } from 'react';
 import { Dialog } from '@headlessui/react';
 import { X } from 'lucide-react';
-import { useState, useEffect } from 'react';
 import { gunBrands } from '../../data/gunBrands';
 import { BarrelLengthSelector } from './BarrelLengthSelector';
-import type { Gun } from '../../types/gun';
+import type { Gun, BarrelType, ChokeType } from '../../types/gun';
 
 interface GunDialogProps {
   isOpen: boolean;
@@ -66,7 +66,7 @@ export function GunDialog({ isOpen, onClose, onSubmit, gun }: GunDialogProps) {
     ? gunBrands.find(b => b.brand === formData.brand)?.models || []
     : [];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.name || !formData.brand || !formData.gauge) return;
     
@@ -85,10 +85,12 @@ export function GunDialog({ isOpen, onClose, onSubmit, gun }: GunDialogProps) {
               {gun ? 'Edit Gun' : 'Add New Gun'}
             </Dialog.Title>
             <button
+              type="button"
               onClick={onClose}
+              aria-label="Close dialog"
               className="text-gray-400 hover:text-gray-500"
             >
-              <X className="h-5 w-5" />
+              <X className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
 
@@ -102,7 +104,10 @@ export function GunDialog({ isOpen, onClose, onSubmit, gun }: GunDialogProps) {
                   type="text"
                   required
                   value={formData.name || ''}
-                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  placeholder="Gun Name"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>

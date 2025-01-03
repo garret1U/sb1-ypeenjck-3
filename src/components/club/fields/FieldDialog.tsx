@@ -114,7 +114,10 @@ export function FieldDialog({ isOpen, onClose, onSubmit, field }: FieldDialogPro
                 type="text"
                 required
                 value={formData.name}
-                onChange={e => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                placeholder="Field Name"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               />
             </div>
@@ -232,8 +235,11 @@ export function FieldDialog({ isOpen, onClose, onSubmit, field }: FieldDialogPro
                   <div key={index} className="flex items-start space-x-3">
                     <input
                       type="date"
+                      aria-label="Maintenance date"
                       value={entry.date}
-                      onChange={e => updateMaintenance(index, { date: e.target.value })}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                        updateMaintenance(index, { date: e.target.value })
+                      }
                       className="block w-auto rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     <input

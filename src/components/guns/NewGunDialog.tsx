@@ -1,6 +1,6 @@
+import React, { useState, type FormEvent, type ChangeEvent } from 'react';
 import { Dialog } from '@headlessui/react';
 import { X } from 'lucide-react';
-import { useState } from 'react';
 import { gunBrands } from '../../data/gunBrands';
 import { BarrelLengthSelector } from './BarrelLengthSelector';
 import type { Gun } from '../../types/gun';
@@ -32,10 +32,9 @@ export function NewGunDialog({ isOpen, onClose, onSubmit }: NewGunDialogProps) {
     ? gunBrands.find(b => b.brand === formData.brand)?.models || []
     : [];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.name || !formData.brand || !formData.gauge) return;
-    
     onSubmit(formData as Gun);
     setFormData({ gauge: '12' });
   };
@@ -49,10 +48,12 @@ export function NewGunDialog({ isOpen, onClose, onSubmit }: NewGunDialogProps) {
           <div className="flex items-center justify-between p-6 border-b">
             <Dialog.Title className="text-lg font-medium">Add New Gun</Dialog.Title>
             <button
+              type="button"
               onClick={onClose}
+              aria-label="Close dialog"
               className="text-gray-400 hover:text-gray-500"
             >
-              <X className="h-5 w-5" />
+              <X className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
 
@@ -60,14 +61,17 @@ export function NewGunDialog({ isOpen, onClose, onSubmit }: NewGunDialogProps) {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               {/* Required Fields */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="gun-name" className="block text-sm font-medium text-gray-700">
                   Name *
                 </label>
                 <input
+                  id="gun-name"
                   type="text"
                   required
+                  aria-label="Gun name"
+                  placeholder="Enter gun name"
                   value={formData.name || ''}
-                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
@@ -79,7 +83,7 @@ export function NewGunDialog({ isOpen, onClose, onSubmit }: NewGunDialogProps) {
                 <select
                   required
                   value={isCustomBrand ? '' : (formData.brand || '')}
-                  onChange={(e) => {
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                     const value = e.target.value;
                     if (value === 'other') {
                       setIsCustomBrand(true);
